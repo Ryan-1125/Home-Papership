@@ -1,42 +1,160 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>纸船 · 首页</title>
-<style>
-:root{
-  --bg:#ffffff;--txt:#1e293b;--card:#fff;--accent:#2563eb;--shadow:0 4px 12px rgba(0,0,0,0.06);
-}
-@media (prefers-color-scheme: dark){
-  :root{--bg:#0f172a;--txt:#e2e8f0;--card:#1e293b;--accent:#3b82f6;--shadow:0 4px 12px rgba(0,0,0,0.2);}
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto; background:var(--bg); color:var(--txt); min-height:100vh;}
-.banner{width:100%;height:28vh;background:url(https://blogs.papership.top/assets/images/banner.jpg) center/cover;position:relative;}
-.banner::after{content:"";inset:0;background:rgba(0,0,0,.15);position:absolute;}
-.profile{max-width:600px;margin:-64px auto 0;padding:0 2rem;text-align:center;position:relative;z-index:10;}
-.avatar{width:120px;height:120px;border-radius:50%;border:4px solid var(--bg);margin:0 auto 1rem;overflow:hidden;background:var(--card);box-shadow:var(--shadow);}
-.avatar img{width:100%;height:100%;object-fit:cover;}
-h1{font-size:2rem;margin-bottom:.5rem;}
-.desc{color:#64748b;margin-bottom:2.5rem;}
-.btn-wrap{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem;}
-a.btn{padding:1.1rem 2.4rem;border-radius:1rem;background:var(--accent);color:white;text-decoration:none;font-weight:600;box-shadow:var(--shadow);transition:.2s;}
-a.btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.1);}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>纸船 | 个人主页</title> <!-- 可改：浏览器标签页标题 -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* 全屏背景基础样式 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: url("images/background.jpg") no-repeat center center fixed; /* 可修改：背景图片路径 */
+      background-size: cover; /* 可修改：背景铺满模式 */
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #1e293b; /* 可修改：亮色模式正文文字颜色 */
+      position: relative; /* 配合右上角固定按钮定位 */
+    }
+    /* 暗色模式整体文字适配 */
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: #e2e8f0; /* 可修改：暗色模式正文文字颜色 */
+      }
+    }
+    /* 右上角GitHub半透明按钮 */
+    .github-btn {
+      position: fixed;
+      top: 20px; /* 可修改：距离顶部距离 */
+      right: 20px; /* 可修改：距离右侧距离 */
+      padding: 10px 18px;
+      border-radius: 10px; /* 可修改：按钮圆角 */
+      background: rgba(255, 255, 255, 0.3); /* 可修改：亮色模式半透明底色 */
+      backdrop-filter: blur(6px); /* 可修改：按钮模糊效果 */
+      color: #1e293b; /* 可修改：亮色模式按钮文字颜色 */
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .github-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+    /* 暗色模式GitHub按钮适配 */
+    @media (prefers-color-scheme: dark) {
+      .github-btn {
+        background: rgba(30, 41, 59, 0.3);
+        color: #e2e8f0;
+        border: 1px solid rgba(30, 41, 59, 0.4);
+      }
+      .github-btn:hover {
+        background: rgba(30, 41, 59, 0.5);
+      }
+    }
+    /* 个人信息卡片主体样式 */
+    .profile-card {
+      background: rgba(255, 255, 255, 0.85); /* 可修改：亮色卡片透明度，最后一位为透明度数值 */
+      backdrop-filter: blur(8px); /* 可修改：卡片背景模糊程度，数值越大越模糊 */
+      width: 100%;
+      max-width: 520px; /* 可修改：卡片最大宽度 */
+      border-radius: 16px; /* 可修改：卡片圆角大小 */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* 可修改：卡片阴影大小 */
+      padding: 42px 36px; /* 可修改：卡片内边距 */
+      text-align: center;
+    }
+    /* 暗色模式个人卡片适配 */
+    @media (prefers-color-scheme: dark) {
+      .profile-card {
+        background: rgba(30, 41, 59, 0.85); /* 可修改：暗色卡片透明度 */
+      }
+    }
+    /* 方形头像容器样式 */
+    .avatar {
+      width: 120px; /* 可修改：头像宽度 */
+      height: 120px; /* 可修改：头像高度，保持和宽度一致为方形 */
+      border-radius: 12px; /* 可修改：头像圆角，0为纯直角 */
+      margin: 0 auto 28px; /* 可修改：头像外边距 */
+      overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.9); /* 可修改：头像边框粗细、颜色、透明度 */
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* 用户名称样式 */
+    .username {
+      font-size: 28px; /* 可修改：用户名字体大小 */
+      font-weight: 700; /* 可修改：用户名粗细 */
+      margin-bottom: 12px; /* 可修改：用户名下方间距 */
+    }
+    /* 个人简介样式 */
+    .bio {
+      font-size: 16px; /* 可修改：简介字体大小 */
+      color: #64748b; /* 可修改：亮色模式简介文字颜色 */
+      line-height: 1.6; /* 可修改：简介行高 */
+      margin-bottom: 40px; /* 可修改：简介下方间距 */
+    }
+    /* 暗色模式简介适配 */
+    @media (prefers-color-scheme: dark) {
+      .bio {
+        color: #94a3b8; /* 可修改：暗色模式简介文字颜色 */
+      }
+    }
+    /* 功能按钮组布局 */
+    .link-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px; /* 可修改：按钮之间的间距 */
+    }
+    /* 功能按钮基础样式 */
+    .link-btn {
+      display: block;
+      padding: 15px 22px; /* 可修改：按钮内边距 */
+      border-radius: 12px; /* 可修改：按钮圆角 */
+      background: #2563eb; /* 可修改：亮色模式按钮背景色 */
+      color: #fff; /* 可修改：按钮文字颜色 */
+      text-decoration: none;
+      font-weight: 600; /* 可修改：按钮文字粗细 */
+      font-size: 16px; /* 可修改：按钮文字大小 */
+      transition: all 0.2s ease;
+    }
+    .link-btn:hover {
+      transform: translateY(-2px); /* 可修改：鼠标悬浮上移距离 */
+      opacity: 0.9; /* 可修改：悬浮透明度 */
+    }
+    /* 暗色模式功能按钮适配 */
+    @media (prefers-color-scheme: dark) {
+      .link-btn {
+        background: #3b82f6; /* 可修改：暗色模式按钮背景色 */
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="banner"></div>
-<div class="profile">
-  <div class="avatar">
-    <img src="https://blogs.papership.top/assets/images/avatar.png" alt="纸船">
+  <!-- 右上角GitHub半透明跳转按钮，可修改链接和文字 -->
+  <a href="https://github.com/你的GitHub用户名" class="github-btn" target="_blank">GitHub</a>
+
+  <div class="profile-card">
+    <div class="avatar">
+      <img src="images/avatar.jpg" alt="个人头像"> <!-- 可改：头像图路径、alt提示文字 -->
+    </div>
+    <h1 class="username">纸船</h1> <!-- 可改：用户名 -->
+    <p class="bio">潺潺流水终于穿过了群山一座座</p> <!-- 可改：个人简介文字 -->
+    <div class="link-group">
+      <a href="https://blogs.papership.top" class="link-btn">前往博客</a> <!-- 可改：博客链接、按钮文字 -->
+      <a href="https://notes.papership.top" class="link-btn">前往笔记</a> <!-- 可改：笔记链接、按钮文字 -->
+    </div>
   </div>
-  <h1>纸船</h1>
-  <p class="desc">去走上一座山吧，走在夕阳下</p>
-</div>
-<div class="btn-wrap">
-  <a href="https://blogs.papership.top" class="btn">我的博客</a>
-  <a href="https://notes.papership.top" class="btn">我的笔记</a>
-</div>
 </body>
 </html>
