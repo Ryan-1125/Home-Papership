@@ -132,14 +132,79 @@
   <script>
     // 你可以使用你自己的真实图片链接
     const images =[
-      "1.jpg",
-      "2.jpg",
+      //曾经头像
+      "提米.jpg",
+      "幼鸟.jpg",
+      "astro.jpg",
+      "steam娘.jpg",
+      //旅游
+      "天峰岭.jpg",
+      "白羊田.jpg",
+      "嵩山日出.jpg",
+      "颐和园.jpg",
+      "东西涌.jpg",
+      "衡山塔.jpg",
+      "南昌.jpg",
+      "广州春日.jpg",
+      "天安门.jpg",
+      "王府井教堂.jpg",
+      "西安.jpg",
+      "重庆.jpg",
+      "滕王阁.jpg",
+      "洪崖洞.jpg",
+      "张家界.jpg",
+      //演唱会
+      "毛不易.jpg",
+      "王心凌.jpg",
+      "陶喆.jpg",
+      "李荣浩.jpg",
+      "薛之谦.jpg",
+      //其他要素
+      "老友记.jpg",
+      "小窝.jpg",
+      "星露谷物语.jpg",
+      "花花.jpg",
     ];
     
     const wall = document.getElementById("wall");
     const preview = document.getElementById("preview");
 
     let currentPhotoEl = null; // 记录当前点开的照片 DOM
+    
+    // 新增：记录已放置的照片位置，防止过度重叠
+    const placedPhotos = [];
+    // 照片尺寸+安全间距
+    const PHOTO_SIZE = 220;
+    const SAFE_GAP = 50;
+    
+    // 判断是否重叠
+    function checkOverlap(x, y) {
+      for(let item of placedPhotos) {
+        const disX = Math.abs(x - item.x);
+        const disY = Math.abs(y - item.y);
+        if(disX < PHOTO_SIZE + SAFE_GAP && disY < PHOTO_SIZE + SAFE_GAP) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    // 获取不重叠的随机坐标
+    function getSafePos() {
+      const maxX = window.innerWidth - PHOTO_SIZE - 40;
+      const maxY = window.innerHeight - PHOTO_SIZE - 40;
+      let x, y;
+      let count = 0;
+      // 最多尝试50次，避免卡死
+      do {
+        x = Math.random() * maxX + 20;
+        y = Math.random() * maxY + 20;
+        count++;
+      } while (checkOverlap(x,y) && count < 50);
+      
+      placedPhotos.push({x,y});
+      return {x,y};
+    }
 
     // 1. 初始化照片墙
     images.forEach((src, index) => {
@@ -151,11 +216,10 @@
       const rotateDeg = (Math.random() - 0.5) * 30; 
       el.dataset.rot = rotateDeg;
 
-      // 保证图片不要超出屏幕边界太多
-      const maxX = window.innerWidth - 250;
-      const maxY = window.innerHeight - 300;
-      el.style.left = Math.max(20, Math.random() * maxX) + "px";
-      el.style.top = Math.max(20, Math.random() * maxY) + "px";
+      // 保证图片不要超出屏幕边界太多，改用防重叠定位
+      const pos = getSafePos();
+      el.style.left = pos.x + "px";
+      el.style.top = pos.y + "px";
       el.style.transform = `rotate(${rotateDeg}deg)`;
       el.style.zIndex = index + 1;
 
